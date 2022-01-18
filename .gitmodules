@@ -1,0 +1,6 @@
+[submodule "ECAPATDNN"]
+	path = ECAPATDNN
+	url = https://github.com/TaoRuijie/ECAPATDNN
+[submodule "aasist"]
+	path = aasist
+	url = https://github.com/clovaai/aasist
