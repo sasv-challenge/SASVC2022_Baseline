@@ -13,34 +13,23 @@ import json, os, argparse
 
 
 SET_LIST = ['train', 'dev', 'eval']
-# SET_TRIAL = {
-#     'train': './LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt',
-#     'dev': './LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt',
-#     'eval': './LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt'
-# }
-# SET_DIR ={
-#     'train': './LA/ASVspoof2019_LA_train/',
-#     'dev': './LA/ASVspoof2019_LA_dev/',
-#     'eval': './LA/ASVspoof2019_LA_eval/'
-# }
-
 SET_TRIAL = {
-    'train': '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt',
-    'dev': '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt',
-    'eval': '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt'
+    'train': './LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt',
+    'dev': './LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt',
+    'eval': './LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt'
+}
+SET_DIR ={
+    'train': './LA/ASVspoof2019_LA_train/',
+    'dev': './LA/ASVspoof2019_LA_dev/',
+    'eval': './LA/ASVspoof2019_LA_eval/'
 }
 SET_TRN = {
     'dev': 
-    ['/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.dev.female.trn.txt',
-    '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.dev.male.trn.txt'],
+    ['./LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.dev.female.trn.txt',
+    './LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.dev.male.trn.txt'],
     'eval': 
-    ['/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.eval.female.trn.txt',
-    '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.eval.male.trn.txt']
-}
-SET_DIR ={
-    'train': '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_train/',
-    'dev': '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_dev/',
-    'eval': '/home1/irteam/db/asvspoof2019/asvspoof2019//LA/ASVspoof2019_LA_eval/'
+    ['./LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.eval.female.trn.txt',
+    './LA/ASVspoof2019_LA_asv_protocols/ASVspoof2019.LA.asv.eval.male.trn.txt']
 }
 
 def save_embeddings(set_name, cm_embd_ext, asv_embd_ext, cm_embd_path, asv_embd_path, device):
@@ -80,11 +69,8 @@ def save_embeddings(set_name, cm_embd_ext, asv_embd_ext, cm_embd_path, asv_embd_
             batch_asv_emb = asv_embd_ext(batch_x, aug = False).detach().cpu().numpy()
         
         for k, cm_emb, asv_emb in zip(key, batch_cm_emb, batch_asv_emb):
-            utt = k
-            spk = utt2spk[utt]
-
-            cm_emb_dic[utt] = cm_emb
-            asv_emb_dic[utt] = asv_emb
+            cm_emb_dic[k] = cm_emb
+            asv_emb_dic[k] = asv_emb
             
     
     with open(cm_embd_path + "%s_embeds.pk"%(set_name), "wb") as f:
@@ -176,10 +162,12 @@ def main():
     cm_embd_ext = AASISTModel(model_config).to(device)
     load_parameters(cm_embd_ext.state_dict(), args.aasist_weight)
     cm_embd_ext.to(device)
+    cm_embd_ext.eval()
     
     asv_embd_ext = ECAPA_TDNN(C = 1024)
     load_parameters(asv_embd_ext.state_dict(), args.ecapa_weight)
     asv_embd_ext.to(device)
+    asv_embd_ext.eval()
 
     for set_name in SET_LIST:
         save_embeddings(set_name, cm_embd_ext, asv_embd_ext, args.cm_embd_path, args.asv_embd_path, device)
