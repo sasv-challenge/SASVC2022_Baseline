@@ -64,3 +64,18 @@ def set_init_weights(m):
             torch.nn.init.kaiming_normal_(m.weight, a=0.01)
         except:
             pass
+
+def load_parameters(trg_state, path):
+    loaded_state = torch.load(path)
+    for name, param in loaded_state.items():
+        origname = name
+        if name not in trg_state:
+            name = name.replace("module.", "")
+            name = name.replace("speaker_encoder.", "")
+            if name not in trg_state:
+                print("%s is not in the model."%origname)
+                continue
+        if trg_state[name].size() != loaded_state[origname].size():
+            print("Wrong parameter length: %s, model: %s, loaded: %s"%(origname, trg_state[name].size(), loaded_state[origname].size()))
+            continue
+        trg_state[name].copy_(param)

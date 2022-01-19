@@ -4,7 +4,6 @@ import pickle as pk
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 
-
 def _get_spkdic(l_cm_meta):
 
     d_spk = {}
@@ -70,7 +69,7 @@ class trainset_loader(Dataset):
                 enr = random.choice(self.spk_dic[spk]["bonafide"])
                 tst = random.choice(self.spk_dic[spk]["spoof"])
 
-        return self.asv_embeds[enr][0], self.asv_embeds[tst][0], self.cm_embeds[tst], ans_type
+        return self.asv_embeds[enr], self.asv_embeds[tst], self.cm_embeds[tst] , ans_type
 
 
 # for asvspoof asv evaluation
@@ -88,7 +87,7 @@ class testset_loader(Dataset):
         line = self.list_IDs[index]
         spkmd, key, _, _ = line.strip().split(" ")
 
-        return self.spk_model[spkmd], self.asv_embeds[key][0], self.cm_embeds[key], key
+        return self.spk_model[spkmd], self.asv_embeds[key], self.cm_embeds[key], key
 
 
 def get_loader(args):
