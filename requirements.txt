@@ -1,2 +1,6 @@
 omegaconf
 pytorch_lightning
+torch
+numpy
+scipy
+sklearn
