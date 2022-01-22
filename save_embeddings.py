@@ -15,18 +15,18 @@ from ECAPATDNN.model import ECAPA_TDNN
 from utils import load_parameters
 
 # list of dataset partitions
-SET_PARTITION = ["train", "dev", "eval"]
+SET_PARTITION = ["trn", "dev", "eval"]
 
 # list of countermeasure(CM) protocols
 SET_CM_PROTOCOL = {
-    "train": "./LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
-    "dev": "./LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt",
-    "eval": "./LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "trn": "protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "dev": "protocols/ASVspoof2019.LA.cm.dev.trl.txt",
+    "eval": "protocols/ASVspoof2019.LA.cm.eval.trl.txt",
 }
 
 # directories of each dataset partition
 SET_DIR = {
-    "train": "./LA/ASVspoof2019_LA_train/",
+    "trn": "./LA/ASVspoof2019_LA_train/",
     "dev": "./LA/ASVspoof2019_LA_dev/",
     "eval": "./LA/ASVspoof2019_LA_eval/",
 }
@@ -46,7 +46,7 @@ SET_TRN = {
 
 
 def save_embeddings(
-    set_name, cm_embd_ext, asv_embd_ext, cm_embd_path, asv_embd_path, device
+    set_name, cm_embd_ext, asv_embd_ext, device
 ):
     meta_lines = open(SET_CM_PROTOCOL[set_name], "r").readlines()
     utt2spk = {}
@@ -85,13 +85,13 @@ def save_embeddings(
             cm_emb_dic[k] = cm_emb
             asv_emb_dic[k] = asv_emb
 
-    with open(cm_embd_path + "%s_embeds.pk" % (set_name), "wb") as f:
+    with open( "embeddings/cm_embd_%s.pk" % (set_name), "wb") as f:
         pk.dump(cm_emb_dic, f)
-    with open(asv_embd_path + "%s_embeds.pk" % (set_name), "wb") as f:
+    with open("embeddings/asv_embd_%s.pk" % (set_name), "wb") as f:
         pk.dump(asv_emb_dic, f)
 
 
-def save_models(set_name, asv_embd_ext, asv_embd_path, device):
+def save_models(set_name, asv_embd_ext, device):
     utt2spk = {}
     utt_list = []
 
@@ -137,7 +137,7 @@ def save_models(set_name, asv_embd_ext, asv_embd_path, device):
     for spk in asv_emb_dic:
         asv_emb_dic[spk] = np.mean(asv_emb_dic[spk], axis=0)
 
-    with open(asv_embd_path + "%s_spkmodels.pk" % (set_name), "wb") as f:
+    with open("embeddings/%s_spk_model.pk" % (set_name), "wb") as f:
         pk.dump(asv_emb_dic, f)
 
 
@@ -145,9 +145,6 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-meta_path", type=str, default="./data/_meta/")
-    parser.add_argument("-cm_embd_path", type=str, default="./data/CM/")
-    parser.add_argument("-asv_embd_path", type=str, default="./data/ASV/")
-
     parser.add_argument(
         "-aasist_config", type=str, default="./aasist/config/AASIST.conf"
     )
@@ -191,13 +188,11 @@ def main():
             set_name,
             cm_embd_ext,
             asv_embd_ext,
-            args.cm_embd_path,
-            args.asv_embd_path,
             device,
         )
         if set_name == "train":
             continue
-        save_models(set_name, asv_embd_ext, args.asv_embd_path, device)
+        save_models(set_name, asv_embd_ext, device)
 
 
 if __name__ == "__main__":
