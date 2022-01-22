@@ -11,15 +11,14 @@ python ./aasist/download_dataset.py
 ```
 
 ### Speaker & spoofing embedding extraction
+Speaker embeddings and spoofing embeddings can be extracted using below script.
 
 ```
-mkdir -p data/_meta/
-cp ./LA/*protocols/*.txt ./data/_meta/
-
 python save_embeddings.py
 ```
 
 ### Baseline 2 Training
+Run below script to train Baseline2 in the evaluation plan.
 ```
 python main.py
 ```
