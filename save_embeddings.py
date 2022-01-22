@@ -85,6 +85,7 @@ def save_embeddings(
             cm_emb_dic[k] = cm_emb
             asv_emb_dic[k] = asv_emb
 
+    os.makedirs("embeddings", exist_ok=True)
     with open( "embeddings/cm_embd_%s.pk" % (set_name), "wb") as f:
         pk.dump(cm_emb_dic, f)
     with open("embeddings/asv_embd_%s.pk" % (set_name), "wb") as f:
@@ -143,8 +144,6 @@ def save_models(set_name, asv_embd_ext, device):
 
 def get_args():
     parser = argparse.ArgumentParser()
-
-    parser.add_argument("-meta_path", type=str, default="./data/_meta/")
     parser.add_argument(
         "-aasist_config", type=str, default="./aasist/config/AASIST.conf"
     )
