@@ -33,7 +33,8 @@ Extracted embeddings will be saved in `./embeddings`.
   - To use prepared emebddings, git-lfs is required.
     ```
     apt-get install git-lfs
-    git lfs pull
+    git-lfs install
+    git-lfs pull
     ```
 
 ```
