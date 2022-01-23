@@ -296,7 +296,7 @@ class System(pl.LightningModule):
             self.asv_embd_eval = pk.load(f)
 
         # load speaker models for development and evaluation sets
-        with open(self.config.dirs.embedding + "dev_spk_model.pk", "rb") as f:
+        with open(self.config.dirs.embedding + "spk_model_dev.pk", "rb") as f:
             self.spk_model_dev = pk.load(f)
-        with open(self.config.dirs.embedding + "eval_spk_model.pk", "rb") as f:
+        with open(self.config.dirs.embedding + "spk_model_eval.pk", "rb") as f:
             self.spk_model_eval = pk.load(f)
