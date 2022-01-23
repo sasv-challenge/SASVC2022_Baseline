@@ -11,7 +11,7 @@ class SASV_Trainset(Dataset):
         self.spk_meta = spk_meta
 
     def __len__(self):
-        return len(self.cm_embeds.keys())
+        return len(self.cm_embd.keys())
 
     def __getitem__(self, index):
 
@@ -29,7 +29,7 @@ class SASV_Trainset(Dataset):
                 tst = random.choice(self.spk_meta[ze_spk]["bonafide"])
 
             if nontarget_type == 2:  # spoof nontarget
-                spk = random.choice(list(self.spk_dic.keys()))
+                spk = random.choice(list(self.spk_meta.keys()))
                 if len(self.spk_meta[spk]["spoof"]) == 0:
                     while True:
                         spk = random.choice(list(self.spk_meta.keys()))
@@ -49,13 +49,13 @@ class SASV_DevEvalset(Dataset):
         self.cm_embd = cm_embd
 
     def __len__(self):
-        return len(self.list_IDs)
+        return len(self.utt_list)
 
     def __getitem__(self, index):
         line = self.utt_list[index]
-        spkmd, key, _, _ = line.strip().split(" ")
+        spkmd, key, _, ans = line.strip().split(" ")
 
-        return self.spk_model[spkmd], self.asv_embd[key], self.cm_embd[key], key
+        return self.spk_model[spkmd], self.asv_embd[key], self.cm_embd[key], ans
 
 
 def get_trnset(
