@@ -160,11 +160,6 @@ def get_args():
 def main():
     args = get_args()
 
-    if not os.path.exists(args.cm_embd_path):
-        os.makedirs(args.cm_embd_path)
-    if not os.path.exists(args.asv_embd_path):
-        os.makedirs(args.asv_embd_path)
-
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("Device: {}".format(device))
 
