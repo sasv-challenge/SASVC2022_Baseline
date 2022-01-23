@@ -40,6 +40,10 @@ def get_all_EERs(
             sasv_labels.append(0)
             spf_labels.append(0)
             spf_preds.append(pred)
+        else:
+            raise ValueError(
+                f"should be one of 'target', 'nontarget', 'spoof', got:{key}"
+            )
 
     fpr, tpr, _ = roc_curve(sasv_labels, preds, pos_label=1)
     sasv_eer = brentq(lambda x: 1.0 - x - interp1d(fpr, tpr)(x), 0.0, 1.0)
