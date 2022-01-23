@@ -42,7 +42,19 @@ python main.py
 ```
 
 ## Developing own models
-- TBA
+- Currently adding...
+
+### Adding custom DNN architecture
+1. create new file under `./models/`.
+2. create a new configuration file under `./configs`
+3. in the new configuration, modify `model_arch` and add required arguments in
+`model_config`.
+4. run `python main.py --config {USER_CONFIG_FILE}` 
+### Using only metrics
+Use `get_all_EERs` in `metrics.py` to calculate all three EERs.
+- prediction scores and keys should be passed on using 
+  - `protocols/ASVspoof2019.LA.asv.dev.gi.trl.txt` or
+  -  `protocols/ASVspoof2019.LA.asv.eval.gi.trl.txt`
 
 ## References
 [1] ASVspoof 2019: A large-scale public database of synthesized, converted and replayed speech
