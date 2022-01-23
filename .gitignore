@@ -1,3 +1,7 @@
 .*
 *pycache*
 *.zip
+*tmp*
+LA*
+exp_result
+
