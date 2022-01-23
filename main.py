@@ -90,6 +90,7 @@ def main(args):
     )
 
     trainer.fit(system)
+    trainer.test(ckpt_path="best")
 
 
 if __name__ == "__main__":
