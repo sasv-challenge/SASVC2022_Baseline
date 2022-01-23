@@ -1,21 +1,16 @@
 import math
 import os
 import pickle as pk
-import random
-from glob import glob
 from importlib import import_module
 from typing import Any
 
-import numpy as np
 import omegaconf
 import pytorch_lightning as pl
 import schedulers as lr_schedulers
 import torch
 import torch.nn.functional as F
-from scipy.interpolate import interp1d
-from scipy.optimize import brentq
-from sklearn.metrics import roc_curve
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader
+from metrics import get_all_EERs
 from utils import keras_decay
 
 
@@ -70,39 +65,11 @@ class System(pl.LightningModule):
 
         preds = torch.cat(preds, dim=0)[:, 1]
         keys = torch.cat(keys, dim=0)
-        sasv_labels, sv_labels, spf_labels = [], [], []
-        sv_preds, spf_preds = [], []
+        sasv_eer, sv_eer, spf_eer = get_all_EERs(preds=preds, keys=keys)
 
-        for pred, key in zip(preds, keys):
-            if key == "target":
-                sasv_labels.append(1)
-                sv_labels.append(1)
-                spf_labels.append(1)
-                sv_preds.append(pred)
-                spf_preds.append(pred)
-
-            elif key == "nontarget":
-                sasv_labels.append(0)
-                sv_labels.append(0)
-                sv_preds.append(pred)
-
-            elif key == "spoof":
-                sasv_labels.append(0)
-                spf_labels.append(0)
-                spf_preds.append(pred)
-
-        fpr, tpr, _ = roc_curve(sasv_labels, preds, pos_label=1)
-        sasv_eer = brentq(lambda x: 1.0 - x - interp1d(fpr, tpr)(x), 0.0, 1.0)
-
-        fpr, tpr, _ = roc_curve(sv_labels, sv_preds, pos_label=1)
-        sv_eer = brentq(lambda x: 1.0 - x - interp1d(fpr, tpr)(x), 0.0, 1.0)
-
-        fpr, tpr, _ = roc_curve(spf_labels, spf_preds, pos_label=1)
-        spf_eer = brentq(lambda x: 1.0 - x - interp1d(fpr, tpr)(x), 0.0, 1.0)
-
-        log_dict["sasv_eer"] = sasv_eer
-        log_dict["sv_eer"] = sv_eer
-        log_dict["spf_eer"] = spf_eer
+        log_dict["dev_sasv_eer"] = sasv_eer
+        log_dict["dev_sv_eer"] = sv_eer
+        log_dict["dev_spf_eer"] = spf_eer
 
         self.log_dict(log_dict)
 
@@ -111,8 +78,21 @@ class System(pl.LightningModule):
         return res_dict
 
     def test_epoch_end(self, outputs):
-        # valid and eval acts the same
-        self.validation_epoch_end(outputs)
+        log_dict = {}
+        preds, keys = [], []
+        for output in outputs:
+            preds.append(output["pred"])
+            keys.append(output["key"])
+
+        preds = torch.cat(preds, dim=0)[:, 1]
+        keys = torch.cat(keys, dim=0)
+        sasv_eer, sv_eer, spf_eer = get_all_EERs(preds=preds, keys=keys)
+
+        log_dict["eval_sasv_eer"] = sasv_eer
+        log_dict["eval_sv_eer"] = sv_eer
+        log_dict["eval_spf_eer"] = spf_eer
+
+        self.log_dict(log_dict)
 
 
     def configure_optimizers(self):
