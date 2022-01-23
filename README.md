@@ -30,6 +30,11 @@ Extracted embeddings will be saved in `./embeddings`.
   - Implmented by https://github.com/TaoRuijie/ECAPATDNN
 - Spoofing embeddings are extracted using the AASIST [2].
 - We also prepared extracted embeddings.
+  - To use prepared emebddings, git-lfs is required.
+    ```
+    apt-get install git-lfs
+    git lfs pull
+    ```
 
 ```
 python save_embeddings.py
