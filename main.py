@@ -54,8 +54,8 @@ def main(args):
         pl.callbacks.LearningRateMonitor(logging_interval="step"),
         pl.callbacks.ModelCheckpoint(
             dirpath=model_save_path,
-            filename="{epoch}-{dev_sasv_eer:.5f}",
-            monitor="dev_sasv_eer",
+            filename="{epoch}-{sasv_eer_dev:.5f}",
+            monitor="sasv_eer_dev",
             mode="min",
             every_n_epochs=config.val_interval_epoch,
             save_top_k=config.save_top_k,
@@ -80,6 +80,7 @@ def main(args):
         limit_val_batches=1.0,
         logger=logger,
         max_epochs=config.epoch,
+        num_sanity_val_steps=0,
         progress_bar_refresh_rate=config.progbar_refresh,  # 0 to disable
         reload_dataloaders_every_n_epochs=config.loader.reload_every_n_epoch
         if config.loader.reload_every_n_epoch is not None
