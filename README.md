@@ -29,6 +29,7 @@ Extracted embeddings will be saved in `./embeddings`.
 - Speaker embeddings are extracted using the ECAPA-TDNN [3].
   - Implmented by https://github.com/TaoRuijie/ECAPATDNN
 - Spoofing embeddings are extracted using the AASIST [2].
+- We also prepared extracted embeddings.
 
 ```
 python save_embeddings.py
