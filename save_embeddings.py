@@ -138,7 +138,7 @@ def save_models(set_name, asv_embd_ext, device):
     for spk in asv_emb_dic:
         asv_emb_dic[spk] = np.mean(asv_emb_dic[spk], axis=0)
 
-    with open("embeddings/%s_spk_model.pk" % (set_name), "wb") as f:
+    with open("embeddings/spk_model.pk_%s" % (set_name), "wb") as f:
         pk.dump(asv_emb_dic, f)
 
 
