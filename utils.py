@@ -116,7 +116,8 @@ def find_gpus(nums=4, min_req_mem=None) -> str:
     return using_gpus
 
 
-def get_spkdic(l_cm_meta: List) -> Dict:
+def get_spkdic(cm_meta: str) -> Dict:
+    l_cm_meta = open(cm_meta, "r").readlines()
 
     d_spk = {}
     # dictionary of speakers
