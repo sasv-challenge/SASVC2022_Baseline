@@ -4,6 +4,8 @@ This repository contains several materials that supplements the Spoofing-Aware S
 - extracting speaker/spoofing embeddings from pre-trained models;
 - training/evaluating Baseline2 in the evaluation plan. 
 
+More information can be found in the [webpage](https://sasv-challenge.github.io) and the [evaluation plan](pdfs/2022_SASV_evaluation_plan_v0.1.pdf) 
+
 ### Prerequisites
 #### Load ECAPA-TDNN & AASIST repositories
 ```
@@ -23,13 +25,53 @@ python ./aasist/download_dataset.py
 
 ### Speaker & spoofing embedding extraction
 Speaker embeddings and spoofing embeddings can be extracted using below script.
+Extracted embeddings will be saved in `./embeddings`.
+- Speaker embeddings are extracted using the ECAPA-TDNN [3].
+  - Implmented by https://github.com/TaoRuijie/ECAPATDNN
+- Spoofing embeddings are extracted using the AASIST [2].
 
 ```
 python save_embeddings.py
 ```
 
-### Baseline 2 Training
+## Baseline 2 Training
 Run below script to train Baseline2 in the evaluation plan.
+- It will reproduce **Baseline2** described in the Evaluation plan.
 ```
 python main.py
+```
+
+## Developing own models
+- TBA
+
+## References
+[1] ASVspoof 2019: A large-scale public database of synthesized, converted and replayed speech
+```bibtex
+@article{wang2020asvspoof,
+  title={ASVspoof 2019: A large-scale public database of synthesized, converted and replayed speech},
+  author={Wang, Xin and Yamagishi, Junichi and Todisco, Massimiliano and Delgado, H{\'e}ctor and Nautsch, Andreas and Evans, Nicholas and Sahidullah, Md and Vestman, Ville and Kinnunen, Tomi and Lee, Kong Aik and others},
+  journal={Computer Speech \& Language},
+  volume={64},
+  pages={101114},
+  year={2020},
+  publisher={Elsevier}
+}
+```
+[2] AASIST: Audio Anti-Spoofing using Integrated Spectro-Temporal Graph Attention Networks
+```bibtex
+@inproceedings{Jung2022AASIST,
+  author={Jung, Jee-weon and Heo, Hee-Soo and Tak, Hemlata and Shim, Hye-jin and Chung, Joon Son and Lee, Bong-Jin and Yu, Ha-Jin and Evans, Nicholas},
+  booktitle={Proc. ICASSP}, 
+  title={AASIST: Audio Anti-Spoofing using Integrated Spectro-Temporal Graph Attention Networks}, 
+  year={2022}
+```
+[3] ECAPA-TDNN: Emphasized Channel Attention, propagation and aggregation in TDNN based speaker verification
+```bibtex
+@inproceedings{desplanques2020ecapa,
+  title={{ECAPA-TDNN: Emphasized Channel Attention, propagation and aggregation in TDNN based speaker verification}},
+  author={Desplanques, Brecht and Thienpondt, Jenthe and Demuynck, Kris},
+  booktitle={Proc. Interspeech 2020},
+  pages={3830--3834},
+  year={2020}
+}
 ```
