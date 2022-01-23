@@ -38,7 +38,7 @@ python save_embeddings.py
 Run below script to train Baseline2 in the evaluation plan.
 - It will reproduce **Baseline2** described in the Evaluation plan.
 ```
-python main.py
+python main.py --config ./configs/baseline2.conf
 ```
 
 ## Developing own models
