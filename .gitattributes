@@ -1,0 +1,8 @@
+embeddings/cm_embd_trn.pk filter=lfs diff=lfs merge=lfs -text
+embeddings/spk_model_dev.pk filter=lfs diff=lfs merge=lfs -text
+embeddings/spk_model_eval.pk filter=lfs diff=lfs merge=lfs -text
+embeddings/asv_embd_dev.pk filter=lfs diff=lfs merge=lfs -text
+embeddings/asv_embd_eval.pk filter=lfs diff=lfs merge=lfs -text
+embeddings/asv_embd_trn.pk filter=lfs diff=lfs merge=lfs -text
+embeddings/cm_embd_dev.pk filter=lfs diff=lfs merge=lfs -text
+embeddings/cm_embd_eval.pk filter=lfs diff=lfs merge=lfs -text
