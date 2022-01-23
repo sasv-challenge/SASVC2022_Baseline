@@ -184,7 +184,7 @@ def main():
             asv_embd_ext,
             device,
         )
-        if set_name == "train":
+        if set_name == "trn":
             continue
         save_models(set_name, asv_embd_ext, device)
 
