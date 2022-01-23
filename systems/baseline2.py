@@ -47,9 +47,6 @@ class System(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx, dataloader_idx=-1):
-        """
-        validation uses same-duration segments
-        """
         embd_asv_enrol, embd_asv_test, embd_cm_test, key = batch
         pred = self.model(embd_asv_enrol, embd_asv_test, embd_cm_test)
         pred = torch.softmax(pred, dim=-1)
@@ -61,15 +58,14 @@ class System(pl.LightningModule):
         preds, keys = [], []
         for output in outputs:
             preds.append(output["pred"])
-            keys.append(output["key"])
+            keys.extend(list(output["key"]))
 
-        preds = torch.cat(preds, dim=0)[:, 1]
-        keys = torch.cat(keys, dim=0)
+        preds = torch.cat(preds, dim=0)[:, 1].detach().cpu().numpy()
         sasv_eer, sv_eer, spf_eer = get_all_EERs(preds=preds, keys=keys)
 
-        log_dict["dev_sasv_eer"] = sasv_eer
-        log_dict["dev_sv_eer"] = sv_eer
-        log_dict["dev_spf_eer"] = spf_eer
+        log_dict["sasv_eer_dev"] = sasv_eer
+        log_dict["sv_eer_dev"] = sv_eer
+        log_dict["spf_eer_dev"] = spf_eer
 
         self.log_dict(log_dict)
 
@@ -82,15 +78,14 @@ class System(pl.LightningModule):
         preds, keys = [], []
         for output in outputs:
             preds.append(output["pred"])
-            keys.append(output["key"])
+            keys.extend(list(output["key"]))
 
-        preds = torch.cat(preds, dim=0)[:, 1]
-        keys = torch.cat(keys, dim=0)
+        preds = torch.cat(preds, dim=0)[:, 1].detach().cpu().numpy()
         sasv_eer, sv_eer, spf_eer = get_all_EERs(preds=preds, keys=keys)
 
-        log_dict["eval_sasv_eer"] = sasv_eer
-        log_dict["eval_sv_eer"] = sv_eer
-        log_dict["eval_spf_eer"] = spf_eer
+        log_dict["sasv_eer_eval"] = sasv_eer
+        log_dict["sv_eer_eval"] = sv_eer
+        log_dict["spf_eer_eval"] = spf_eer
 
         self.log_dict(log_dict)
 
@@ -100,7 +95,6 @@ class System(pl.LightningModule):
             optimizer = torch.optim.Adam(
                 params=self.parameters(),
                 lr=self.config.optim.lr,
-                betas=self.config.optim.betas,
                 weight_decay=self.config.optim.wd,
             )
         elif self.config.optimizer.lowe() == "sgd":
@@ -214,7 +208,7 @@ class System(pl.LightningModule):
             num_workers=self.config.loader.n_workers,
         )
 
-    def dev_dataloader(self):
+    def val_dataloader(self):
         with open(self.config.dirs.sasv_dev_trial, "r") as f:
             sasv_dev_trial = f.readlines()
         self.dev_ds = self.ds_func_dev(
@@ -227,7 +221,7 @@ class System(pl.LightningModule):
             num_workers=self.config.loader.n_workers,
         )
 
-    def eval_dataloader(self):
+    def test_dataloader(self):
         with open(self.config.dirs.sasv_eval_trial, "r") as f:
             sasv_eval_trial = f.readlines()
         self.eval_ds = self.ds_func_eval(
