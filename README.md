@@ -4,7 +4,7 @@ This repository contains several materials that supplements the Spoofing-Aware S
 - extracting speaker/spoofing embeddings from pre-trained models;
 - training/evaluating Baseline2 in the evaluation plan. 
 
-More information can be found in the [webpage](https://sasv-challenge.github.io) and the [evaluation plan](pdfs/2022_SASV_evaluation_plan_v0.1.pdf) 
+More information can be found in the [webpage](https://sasv-challenge.github.io) and the [evaluation plan](pdfs/2022_SASV_evaluation_plan_v0.2.pdf) 
 
 ### Prerequisites
 #### Load ECAPA-TDNN & AASIST repositories
