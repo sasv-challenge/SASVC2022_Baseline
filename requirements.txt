@@ -3,4 +3,4 @@ pytorch_lightning
 torch
 numpy
 scipy
-sklearn
+scikit-learn
