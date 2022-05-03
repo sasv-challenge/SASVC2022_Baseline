@@ -69,7 +69,7 @@ def set_init_weights(m):
             pass
 
 def load_parameters(trg_state, path):
-    loaded_state = torch.load(path)
+    loaded_state = torch.load(path, map_location=lambda storage, loc: storage)
     for name, param in loaded_state.items():
         origname = name
         if name not in trg_state:

@@ -1,6 +1,10 @@
 omegaconf==2.0.6
 pytorch_lightning
 torch
+torchvision
+torchcontrib
 numpy
 scipy
 scikit-learn
+pathlib
+soundfile

@@ -72,7 +72,7 @@ def save_embeddings(
     cm_emb_dic = {}
     asv_emb_dic = {}
 
-    print("Getting embedgins from set %s..." % (set_name))
+    print("Getting embeddings from set %s..." % (set_name))
 
     for batch_x, key in tqdm(loader):
         batch_x = batch_x.to(device)
